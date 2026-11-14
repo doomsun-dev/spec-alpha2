@@ -1035,7 +1035,7 @@
    (let [gen-into (if conform-into (empty conform-into) (get empty-coll kind-form))
          spec (delay (s/resolve-spec form))
          check? #(s/valid? @spec %)
-         kfn (if kfn (s/resolve-fn kfn) (fn [i v] v))
+         kfn (if kfn (s/resolve-fn kfn) (fn [i v] i))
          addcv (fn [ret i v cv] (conj ret cv))
          cfns (fn [x]
                 ;;returns a tuple of [init add complete] fns

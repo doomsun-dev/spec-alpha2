@@ -60,6 +60,7 @@
         s (s/coll-of (s/cat :tag keyword? :val any?) :kind list?)
         v (s/coll-of keyword? :kind vector?)
         coll (s/coll-of keyword?)
+        evry (s/every keyword?)
         lrange (s/int-in 7 42)
         drange (s/double-in :infinite? false :NaN? false :min 3.1 :max 3.2)
         irange (s/inst-in #inst "1939" #inst "1946")
@@ -196,7 +197,12 @@
       coll [:a] [:a] nil
       coll [:a :b] [:a :b] nil
       coll (map identity [:a :b]) '(:a :b) nil
-      ;;coll [:a "b"] ::s/invalid '[{:pred (coll-checker keyword?), :val [:a b]}]
+      ;; :in names a bad element by its index, as in spec1
+      coll [:a "b"] ::s/invalid '[{:pred clojure.core/keyword?, :val "b", :in [1]}]
+      coll '(:a :b "c") ::s/invalid '[{:pred clojure.core/keyword?, :val "c", :in [2]}]
+      v [:a 1 :c 2] ::s/invalid '[{:pred clojure.core/keyword?, :val 1, :in [1]}
+                                  {:pred clojure.core/keyword?, :val 2, :in [3]}]
+      evry [:a "b"] ::s/invalid '[{:pred clojure.core/keyword?, :val "b", :in [1]}]
 
       schema1 {} {} nil
       schema1 {::k1 1 ::k2 :a} {::k1 1 ::k2 :a} nil
